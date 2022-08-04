@@ -8,11 +8,21 @@ import (
 
 var SERVER_ADDRESS string
 var SERVER_PORT string
+var DB_USER string
+var DB_PASSWORD string
+var DB_HOST string
+var DB_PORT string
+var DB_NAME string
 
 func SanityCheck() {
 	envProps := []string{
 		"SERVER_ADDRESS",
 		"SERVER_PORT",
+		"DB_USER",
+		"DB_PASSWORD",
+		"DB_HOST",
+		"DB_PORT",
+		"DB_NAME",
 	}
 
 	for _, key := range envProps {
@@ -22,4 +32,9 @@ func SanityCheck() {
 	}
 	SERVER_ADDRESS = os.Getenv("SERVER_ADDRES")
 	SERVER_PORT = os.Getenv("SERVER_PORT")
+	DB_USER = os.Getenv("DB_USER")
+	DB_PASSWORD = os.Getenv("DB_PASSWORD")
+	DB_HOST = os.Getenv("DB_HOST")
+	DB_PORT = os.Getenv("DB_PORT")
+	DB_NAME = os.Getenv("DB_NAME")
 }
