@@ -1,0 +1,592 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Mini Project",
+        "version": "1",
+        "description": "OpenAPI for Mini Project Golang",
+        "contact": {
+            "name": "Syahrul",
+            "email": "arulproject@gmail.com",
+            "url": "https://github.com/Syahrul25arul"
+        }
+    },
+    "paths": {
+        "/products": {
+            "get": {
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get products",
+                "description": "Get all products",
+                "responses": {
+                    "200": {
+                        "description": "Success get all products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/arrayGetProducts"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Example success get all products",
+                                        "value": [
+                                            {
+                                                "product_id": "1",
+                                                "name": "mie goreng",
+                                                "category": "makanan",
+                                                "price": {
+                                                    "formatted": "Rp. 2000",
+                                                    "unformatted": 2000
+                                                },
+                                                "stock": 30,
+                                                "description_product": "ini contoh deskripsi produk",
+                                                "images": [
+                                                    "image1.jpg",
+                                                    "image2.jpg"
+                                                ]
+                                            },
+                                            {
+                                                "product_id": "2",
+                                                "name": "teh pucuk",
+                                                "category": "minuman",
+                                                "price": {
+                                                    "formatted": "Rp. 4.500",
+                                                    "unformatted": 4500
+                                                },
+                                                "stock": 15,
+                                                "description_product": "ini contoh deskripsi produk",
+                                                "images": [
+                                                    "image1.jpg",
+                                                    "image2.jpg"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "include done",
+                        "in": "query",
+                        "required": false,
+                        "description": "Is include done products",
+                        "schema": {
+                            "type": "boolean",
+                            "nullable": true,
+                            "default": false
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter products by name",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true,
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        "examples": {
+                            "Golang": {
+                                "value": "Golang",
+                                "description": "Example get products with golang"
+                            }
+                        }
+                    }
+                ]
+            },
+            "post": {
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create new Products",
+                "description": "Create new product to database",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateOrUpdateProduct"
+                            },
+                            "examples": {
+                                "Golang": {
+                                    "description": "Example create product Golang",
+                                    "value": {
+                                        "name_product": "Mie Goreng",
+                                        "category": 3,
+                                        "price": 5000,
+                                        "stock": 12,
+                                        "description_product": "mie goreng indomie product",
+                                        "image": [
+                                            "image1.jpg",
+                                            "image2.jpg"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success create product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/arrayGetProducts"
+                                },
+                                "examples": {
+                                    "java": {
+                                        "description": "Success create product with golang",
+                                        "value": [
+                                            {
+                                                "code": "200",
+                                                "status": "ok",
+                                                "message": "success create product"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products?page={page}": {
+            "get": {
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get pagination products",
+                "description": "Get all products with pagination",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": true,
+                        "description": "pagination product per page",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true,
+                            "minLength": 1
+                        },
+                        "examples": {
+                            "page": {
+                                "value": "1",
+                                "description": "Example page pagination"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success get products pagiantion",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/arrayGetProducts"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Example success get all products pagination",
+                                        "value": [
+                                            {
+                                                "product_id": "1",
+                                                "name": "mie goreng",
+                                                "category": "makanan",
+                                                "price": {
+                                                    "formatted": "Rp. 2000",
+                                                    "unformatted": 2000
+                                                },
+                                                "stock": 30,
+                                                "description_product": "ini contoh deskripsi produk",
+                                                "images": [
+                                                    "image1.jpg",
+                                                    "image2.jpg"
+                                                ]
+                                            },
+                                            {
+                                                "product_id": "2",
+                                                "name": "teh pucuk",
+                                                "category": "minuman",
+                                                "price": {
+                                                    "formatted": "Rp. 4.500",
+                                                    "unformatted": 4500
+                                                },
+                                                "stock": 15,
+                                                "description_product": "ini contoh deskripsi produk",
+                                                "images": [
+                                                    "image1.jpg",
+                                                    "image2.jpg"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{productId}": {
+            "get": {
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "get product by id",
+                "description": "Get data product in database by id",
+                "responses": {
+                    "200": {
+                        "description": "Success get product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Example success get products by id",
+                                        "value": {
+                                            "product_id": "1",
+                                            "name": "mie goreng",
+                                            "category": "makanan",
+                                            "price": {
+                                                "formatted": "Rp. 2000",
+                                                "unformatted": 2000
+                                            },
+                                            "stock": 30,
+                                            "description_product": "ini contoh deskripsi produk",
+                                            "images": [
+                                                "image1.jpg",
+                                                "image2.jpg"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Failed get product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "failed": {
+                                        "description": "Failed get product by id",
+                                        "value": {
+                                            "success": false,
+                                            "message": "product not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/productId"
+                    }
+                ]
+            },
+            "delete": {
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete existing product",
+                "description": "Delete existing product in database",
+                "responses": {
+                    "200": {
+                        "description": "Success delete product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success delete product",
+                                        "value": {
+                                            "success": true,
+                                            "message": "success delete product"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Failed delete not found product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "failed": {
+                                        "description": "Failed delete product",
+                                        "value": {
+                                            "success": false,
+                                            "message": "delete product not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/productId"
+                    }
+                ]
+            },
+            "put": {
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update existing product",
+                "description": "Update existing product in databse",
+                "responses": {
+                    "200": {
+                        "description": "Success Update product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/arrayGetProducts"
+                                },
+                                "examples": {
+                                    "Golang": {
+                                        "description": "Success update product with golang",
+                                        "value": {
+                                            "product_id": "1",
+                                            "name": "mie goreng",
+                                            "category": "makanan",
+                                            "price": {
+                                                "formatted": "Rp. 2000",
+                                                "unformatted": 2000
+                                            },
+                                            "stock": 30,
+                                            "description_product": "ini contoh deskripsi produk",
+                                            "images": [
+                                                "image1.jpg",
+                                                "image2.jpg"
+                                            ],
+                                            "message": "success update product"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/productId"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateOrUpdateProduct"
+                            },
+                            "examples": {
+                                "Golang": {
+                                    "description": "Example update product with golang",
+                                    "value": {
+                                        "name": "mie goreng",
+                                        "category": "makanan",
+                                        "price": {
+                                            "formatted": "Rp. 2000",
+                                            "unformatted": 2000
+                                        },
+                                        "stock": 30,
+                                        "description_product": "ini contoh deskripsi produk",
+                                        "images": [
+                                            "image1.jpg",
+                                            "image2.jpg"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "jwtAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Authentication for Mini Project"
+            }
+        },
+        "parameters": {
+            "productId": {
+                "name": "productId",
+                "in": "path",
+                "required": true,
+                "description": "productId id for getById, update and delete",
+                "schema": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                },
+                "examples": {
+                    "golang": {
+                        "description": "Sample mini project parameter for Golang",
+                        "value": 1
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "Products": {
+                "type": "object",
+                "properties": {
+                    "product_id": {
+                        "type": "string"
+                    },
+                    "product_name": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "object",
+                        "properties": {
+                            "formatted": {
+                                "type": "string"
+                            },
+                            "unformatted": {
+                                "type": "number",
+                                "format": "int32"
+                            }
+                        }
+                    },
+                    "stock": {
+                        "type": "number",
+                        "format": "int32"
+                    },
+                    "description_product": {
+                        "type": "string"
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "CreateOrUpdateProduct": {
+                "type": "object",
+                "properties": {
+                    "product_name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "required": [
+                            "true"
+                        ]
+                    },
+                    "category": {
+                        "type": "integer",
+                        "format": "int32",
+                        "required": [
+                            "true"
+                        ]
+                    },
+                    "price": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "stock": {
+                        "type": "number",
+                        "format": "int32",
+                        "default": 0
+                    },
+                    "description_product": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "arrayGetProducts": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Products"
+                }
+            }
+        }
+    }
+}

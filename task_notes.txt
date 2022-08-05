@@ -1,0 +1,20 @@
+- buat database (done)
+ * tentukan table (done)
+ * tentukan field (done)
+ * tentukan tipe data(done)
+ * buat validasi (dokumentasi)
+ * tentukan relasi(done)
+- buat dokumentasi api (done)
+ * dokumentasi api for add admin with secret key (done)
+ * buat endpoint untuk login dengan mengembalikan token jwt dan payload middleware(guest)  (done)
+ * buat end point register untuk customer, password di tambah dengan salt dan di hashing sebelum masuk kedatabase middleware(guest) (done)
+ * buat dokumentasi untuk get semua produk dengan limit data. middleware auth(customer,admin)
+ * buat dokumentasi untuk pagination dari get produk. middleware auth(customer,admin)
+ * buat dokumentasi untuk get product by id. middleware auth(customer,admin)
+ * buat dokumentasi untuk create product. middleware auth(admin)
+ * buat dokumentasi untuk update produk. middleware auth(admin)
+ * buat dokumentasi untuk delete produk. middleware auth(admin)
+- buat login dan register
+- buat authentikasi routing dengan jwt dan testing
+- buat api endpoint untuk produk
+- buat pagination untuk end point produk

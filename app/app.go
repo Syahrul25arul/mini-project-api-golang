@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"mini-project/config"
-	"mini-project/database"
 	"mini-project/logger"
 	"net/http"
 
@@ -21,7 +20,7 @@ func Start() {
 	config.SanityCheck()
 
 	// get db connection
-	dbClient := database.GetClientDb()
+	// dbClient := database.GetClientDb()
 
 	// give info where server and port app running
 	logger.Info(fmt.Sprintf("start server on  %s:%s ...", config.SERVER_ADDRESS, config.SERVER_PORT))
