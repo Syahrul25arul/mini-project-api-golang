@@ -5,6 +5,6 @@ import (
 	"mini-project/errs"
 )
 
-type userRepository interface {
+type UserRepository interface {
 	SaveAdmin(user domain.Users) *errs.AppErr
 }

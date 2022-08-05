@@ -16,6 +16,11 @@ func GetClientDb() *gorm.DB {
 	db_dbname := config.DB_NAME
 	db_port := config.DB_PORT
 
+	// check if app run testing
+	if config.TESTING == "true" {
+		db_dbname = config.DB_NAME_TESTING
+	}
+
 	// set dsn
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", db_host, db_user, db_password, db_dbname, db_port)
 	// connect to db postgres

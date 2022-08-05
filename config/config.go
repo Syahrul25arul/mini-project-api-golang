@@ -13,6 +13,8 @@ var DB_PASSWORD string
 var DB_HOST string
 var DB_PORT string
 var DB_NAME string
+var TESTING string
+var DB_NAME_TESTING string
 
 func SanityCheck() {
 	envProps := []string{
@@ -23,6 +25,8 @@ func SanityCheck() {
 		"DB_HOST",
 		"DB_PORT",
 		"DB_NAME",
+		"TESTING",
+		"DB_NAME_TESTING",
 	}
 
 	for _, key := range envProps {
@@ -37,4 +41,6 @@ func SanityCheck() {
 	DB_HOST = os.Getenv("DB_HOST")
 	DB_PORT = os.Getenv("DB_PORT")
 	DB_NAME = os.Getenv("DB_NAME")
+	TESTING = os.Getenv("TESTING")
+	DB_NAME_TESTING = os.Getenv("DB_NAME_TESTING")
 }
