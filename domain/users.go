@@ -9,10 +9,10 @@ type Users struct {
 	CustomerId sql.NullInt32 `db:"customer_id"`
 }
 
-func (u Users) SetRoleUser() {
+func (u *Users) SetRoleUser() {
 	u.Role = "user"
 }
 
-func (u Users) SetRoleAdmin() {
+func (u *Users) SetRoleAdmin() {
 	u.Role = "admin"
 }

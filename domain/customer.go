@@ -12,7 +12,7 @@ type RegisterRequest struct {
 	Name        string `json:"name"`
 	DateOfBirth string `json:"date_of_birth"`
 	ZipCode     string `json:"zip_code"`
-	Status      string `json:"string"`
+	Status      string `json:"status"`
 	Username    string `json:"username"`
 	Password    string `json:"password"`
 }
