@@ -6,5 +6,5 @@ import (
 )
 
 type CustomerRepository interface {
-	Register(customer domain.Customer) *errs.AppErr
+	Register(customer *domain.Customer, user *domain.Users) *errs.AppErr
 }

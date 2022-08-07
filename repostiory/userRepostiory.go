@@ -7,5 +7,5 @@ import (
 
 type UserRepository interface {
 	// SaveAdmin(user domain.Users) *errs.AppErr
-	SaveUser(user domain.Users) *errs.AppErr
+	SaveUser(user *domain.Users) *errs.AppErr
 }

@@ -6,5 +6,5 @@ import (
 )
 
 type CustomerService interface {
-	RegisterCustomer(customer domain.Customer) *errs.AppErr
+	RegisterCustomer(request domain.RegisterRequest) *errs.AppErr
 }

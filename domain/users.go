@@ -8,3 +8,11 @@ type Users struct {
 	Role       string        `db:"role"`
 	CustomerId sql.NullInt32 `db:"customer_id"`
 }
+
+func (u Users) SetRoleUser() {
+	u.Role = "user"
+}
+
+func (u Users) SetRoleAdmin() {
+	u.Role = "admin"
+}

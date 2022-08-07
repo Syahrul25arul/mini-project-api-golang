@@ -28,28 +28,43 @@ func TestCustomerServiceImpl_RegisterCustomer(t *testing.T) {
 
 	testCase := []struct {
 		name     string
-		want     domain.Customer
+		want     domain.RegisterRequest
 		expected *errs.AppErr
 	}{
 		{
 			name:     "Register Service success",
-			want:     domain.Customer{Name: "jamal", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "active"},
+			want:     domain.RegisterRequest{Name: "jamal", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "active", Username: "jamal12", Password: "jamalPassword"},
 			expected: nil,
 		},
 		{
 			name:     "Register service success with set default status inactive",
-			want:     domain.Customer{Name: "petrus", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "test"},
+			want:     domain.RegisterRequest{Name: "petrus", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "test", Username: "petrus31", Password: "petrusPassword"},
 			expected: nil,
 		},
 		{
 			name:     "Register Service failed validation error field empty",
-			want:     domain.Customer{Name: "hendrik", DateOfBirth: "1995-02-25", ZipCode: "13421"},
+			want:     domain.RegisterRequest{Name: "hendrik", DateOfBirth: "1995-02-25", ZipCode: "13421", Username: "hendrik65", Password: "hendrik"},
 			expected: errs.NewValidationError("field Status cannot be empty"),
 		},
 		{
 			name:     "Register service failed empty with status = ''",
-			want:     domain.Customer{Name: "petrus", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: ""},
+			want:     domain.RegisterRequest{Name: "petrus", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: ""},
 			expected: errs.NewValidationError("field Status cannot be empty"),
+		},
+		{
+			name:     "Register service failed empty with username = ''",
+			want:     domain.RegisterRequest{Name: "test", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "active", Password: "password"},
+			expected: errs.NewValidationError("field Username cannot be empty"),
+		},
+		{
+			name:     "Register service failed empty with password = ''",
+			want:     domain.RegisterRequest{Name: "test", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "active", Username: "test12"},
+			expected: errs.NewValidationError("field Password cannot be empty"),
+		},
+		{
+			name:     "Register Service failed duplicate primary key username",
+			want:     domain.RegisterRequest{Name: "jamal", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "active", Username: "jamal12", Password: "jamalPassword"},
+			expected: errs.NewUnexpectedError("error insert data user"),
 		},
 	}
 
