@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"regexp"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -27,4 +28,15 @@ func ShowDataWithTypeJson(data interface{}, w http.ResponseWriter, code int) {
 func ShowDataWithTypeXml(data interface{}, w http.ResponseWriter, code int) {
 	w.Header().Add("Content-type", "application/xml")
 	xml.NewEncoder(w).Encode(data)
+}
+
+func ClearDoubleCode(str string) string {
+	regex, _ := regexp.Compile(`[\"]+`)
+	str = regex.ReplaceAllStringFunc(str, func(s string) string {
+		if s == "\"" {
+			return ""
+		}
+		return s
+	})
+	return str
 }

@@ -6,11 +6,11 @@ import (
 	"mini-project/config"
 	"mini-project/database"
 	"mini-project/domain"
+	"mini-project/helper"
 	"mini-project/repostiory"
 	"mini-project/service"
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -104,13 +104,7 @@ func TestCustomerHandler_RegisterCustomerHandler(t *testing.T) {
 			response := w.Body.String()
 
 			// clear double quote from response body
-			regex, _ := regexp.Compile(`[\"]+`)
-			response = regex.ReplaceAllStringFunc(response, func(s string) string {
-				if s == "\"" {
-					return ""
-				}
-				return s
-			})
+			response = helper.ClearDoubleCode(response)
 
 			assert.Equal(t, testTable.expectedMessage, response)
 		})

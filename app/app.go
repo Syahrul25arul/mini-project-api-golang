@@ -20,12 +20,17 @@ func Start() {
 
 	// check all variables are loaded
 	config.SanityCheck()
+	dbClient := database.GetClientDb()
 
 	// prepare handler customer
-	dbClient := database.GetClientDb()
 	customerRepository := repostiory.NewCustomerRepository(dbClient)
 	customerService := service.NewCustomerService(customerRepository)
 	customerHandler := CustomerHandler{customerService}
+
+	// prepare handle auth login
+	userRepo := repostiory.NewUserRepository(dbClient)
+	authService := service.NewAuthService(userRepo)
+	authHandler := AuthHandler{authService}
 
 	r := gin.Default()
 	// r.GET("/", func(ctx *gin.Context) {
@@ -35,6 +40,7 @@ func Start() {
 	// })
 
 	r.POST("/register", customerHandler.RegisterCustomerHandler)
+	r.POST("/login", authHandler.LoginHandler)
 
 	// give info where server and port app running
 	logger.Info(fmt.Sprintf("start server on  %s:%s ...", config.SERVER_ADDRESS, config.SERVER_PORT))
