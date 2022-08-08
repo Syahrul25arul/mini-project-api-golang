@@ -2,60 +2,29 @@ package repostiory
 
 import (
 	"database/sql"
+	"mini-project/config"
 	"mini-project/database"
 	"mini-project/domain"
 	"mini-project/errs"
+	"mini-project/helper"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 )
 
-// func TestUserRepositoryImpl_SaveUser(t *testing.T) {
-// 	// prepare database and repository
-// 	db := database.GetClientDb()
-// 	repository := NewUserRepository(db)
+func SetupUsers() *gorm.DB {
+	db := database.GetClientDb()
+	repoCustomer := NewCustomerRepository(db)
+	customer := domain.Customer{Name: "jamal", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "inactive"}
+	user := domain.Users{Username: "jamal12", Password: helper.BcryptPassword(config.SECRET_KEY + "password"), Role: "user"}
 
-// 	customerRepo := NewCustomerRepository(db)
-// 	newCustomer := domain.Customer{Name: "jamal", DateOfBirth: "1995-02-25", ZipCode: "13421", Status: "active"}
-// 	customerRepo.Register(newCustomer)
-
-// 	testCase := []struct {
-// 		name     string
-// 		want     domain.Users
-// 		expected *errs.AppErr
-// 	}{
-// 		{
-// 			name:     "Save user success",
-// 			want:     domain.Users{Username: "hendrik", Password: bcryptPassword(config.SECRET_KEY + "hendrikpassword"), Role: "user", CustomerId: sql.NullInt32{Int32: 1, Valid: true}},
-// 			expected: nil,
-// 		},
-// 		{
-// 			name:     "Save user failed primary key required",
-// 			want:     domain.Users{Password: bcryptPassword(config.SECRET_KEY + "hendrikpassword"), Role: "user", CustomerId: sql.NullInt32{Int32: 1, Valid: true}},
-// 			expected: errs.NewUnexpectedError("error insert data user"),
-// 		},
-// 		{
-// 			name:     "Save user failed primary key duplicate",
-// 			want:     domain.Users{Username: "hendrik", Password: bcryptPassword(config.SECRET_KEY + "hendrikpassword"), Role: "user", CustomerId: sql.NullInt32{Int32: 1, Valid: true}},
-// 			expected: errs.NewUnexpectedError("error insert data user"),
-// 		},
-// 		{
-// 			name:     "Save user failed field empty password",
-// 			want:     domain.Users{Username: "rizal", Role: "user", CustomerId: sql.NullInt32{Int32: 1, Valid: true}},
-// 			expected: errs.NewUnexpectedError("error insert data user"),
-// 		},
-// 	}
-
-// 	for _, testTable := range testCase {
-// 		t.Run(testTable.name, func(t *testing.T) {
-// 			result := repository.SaveUser(testTable.want)
-// 			assert.Equal(t, testTable.expected, result)
-// 		})
-// 	}
-// }
+	repoCustomer.Register(&customer, &user)
+	return db
+}
 
 func TestGetAllUser(t *testing.T) {
-	db := database.GetClientDb()
+	db := SetupUsers()
 	repo := NewUserRepository(db)
 
 	testCase := []struct {
@@ -67,21 +36,26 @@ func TestGetAllUser(t *testing.T) {
 		{
 			name:      "find user success",
 			want:      "jamal12",
-			expected1: &domain.Users{Username: "jamal12", Password: "$2a$08$rAUSlMpHl9OXIjVF9qIuBejkR5UfmpASCTxeDRradYcOhtdktpYPq", Role: "user", CustomerId: sql.NullInt32{Int32: 1, Valid: true}},
+			expected1: &domain.Users{Username: "jamal12", Role: "user", CustomerId: sql.NullInt32{Int32: 1, Valid: true}},
 			expected2: nil,
 		},
 		{
 			name:      "find user failed not found",
 			want:      "test",
 			expected1: nil,
-			expected2: errs.NewNotFoundError("error get data user by username not found"),
+			expected2: errs.NewAuthenticationError("invalid credential"),
 		},
 	}
 
 	for _, testTable := range testCase {
 		t.Run(testTable.name, func(t *testing.T) {
 			result, err := repo.FindByUsername(testTable.want)
-			assert.Equal(t, result, testTable.expected1)
+
+			if err == nil {
+				assert.Equal(t, result.Username, testTable.expected1.Username)
+				assert.Equal(t, result.CustomerId, testTable.expected1.CustomerId)
+				assert.Equal(t, result.Role, testTable.expected1.Role)
+			}
 			assert.Equal(t, err, testTable.expected2)
 		})
 	}

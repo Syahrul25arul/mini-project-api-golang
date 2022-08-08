@@ -16,3 +16,7 @@ func (u *Users) SetRoleUser() {
 func (u *Users) SetRoleAdmin() {
 	u.Role = "admin"
 }
+
+func (u *Users) ToLogin() Login {
+	return Login{Username: u.Username, CustomerId: sql.NullInt32{Int32: u.CustomerId.Int32, Valid: true}, Role: u.Role}
+}

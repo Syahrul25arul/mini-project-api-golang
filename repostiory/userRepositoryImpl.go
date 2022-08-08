@@ -29,7 +29,7 @@ func (u UserRepositoryImpl) FindByUsername(username string) (*domain.Users, *err
 	var user domain.Users
 	if result := u.db.Where("username = ?", username).Find(&user); result.RowsAffected == 0 {
 		logger.Error("error get data user by username not found")
-		return nil, errs.NewNotFoundError("error get data user by username not found")
+		return nil, errs.NewAuthenticationError("invalid credential")
 	}
 
 	return &user, nil
