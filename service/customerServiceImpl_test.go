@@ -16,7 +16,7 @@ func TestMain(m *testing.M) {
 	godotenv.Load("./../.env")
 	config.SanityCheck()
 	db := database.GetClientDb()
-	db.Exec("TRUNCATE TABLE users, customers restart identity")
+	db.Exec("TRUNCATE TABLE users, customers, products restart identity")
 	m.Run()
 }
 
