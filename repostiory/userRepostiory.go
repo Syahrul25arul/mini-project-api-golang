@@ -8,4 +8,5 @@ import (
 type UserRepository interface {
 	// SaveAdmin(user domain.Users) *errs.AppErr
 	SaveUser(user *domain.Users) *errs.AppErr
+	FindByUsername(username string) (*domain.Users, *errs.AppErr)
 }

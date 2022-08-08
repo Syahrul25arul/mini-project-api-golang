@@ -23,5 +23,4 @@ func (handler CustomerHandler) RegisterCustomerHandler(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusCreated, "registrasi berhasil")
 	}
-
 }

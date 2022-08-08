@@ -24,3 +24,13 @@ func (u UserRepositoryImpl) SaveUser(user *domain.Users) *errs.AppErr {
 
 	return nil
 }
+
+func (u UserRepositoryImpl) FindByUsername(username string) (*domain.Users, *errs.AppErr) {
+	var user domain.Users
+	if result := u.db.Where("username = ?", username).Find(&user); result.RowsAffected == 0 {
+		logger.Error("error get data user by username not found")
+		return nil, errs.NewNotFoundError("error get data user by username not found")
+	}
+
+	return &user, nil
+}

@@ -1,5 +1,15 @@
 package repostiory
 
+import (
+	"database/sql"
+	"mini-project/database"
+	"mini-project/domain"
+	"mini-project/errs"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
 // func TestUserRepositoryImpl_SaveUser(t *testing.T) {
 // 	// prepare database and repository
 // 	db := database.GetClientDb()
@@ -43,3 +53,36 @@ package repostiory
 // 		})
 // 	}
 // }
+
+func TestGetAllUser(t *testing.T) {
+	db := database.GetClientDb()
+	repo := NewUserRepository(db)
+
+	testCase := []struct {
+		name      string
+		want      string
+		expected1 *domain.Users
+		expected2 *errs.AppErr
+	}{
+		{
+			name:      "find user success",
+			want:      "jamal12",
+			expected1: &domain.Users{Username: "jamal12", Password: "$2a$08$rAUSlMpHl9OXIjVF9qIuBejkR5UfmpASCTxeDRradYcOhtdktpYPq", Role: "user", CustomerId: sql.NullInt32{Int32: 1, Valid: true}},
+			expected2: nil,
+		},
+		{
+			name:      "find user failed not found",
+			want:      "test",
+			expected1: nil,
+			expected2: errs.NewNotFoundError("error get data user by username not found"),
+		},
+	}
+
+	for _, testTable := range testCase {
+		t.Run(testTable.name, func(t *testing.T) {
+			result, err := repo.FindByUsername(testTable.want)
+			assert.Equal(t, result, testTable.expected1)
+			assert.Equal(t, err, testTable.expected2)
+		})
+	}
+}
