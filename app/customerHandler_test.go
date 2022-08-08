@@ -23,6 +23,7 @@ func TestMain(m *testing.M) {
 	config.SanityCheck()
 	db := database.GetClientDb()
 	db.Exec("TRUNCATE TABLE users, customers restart identity")
+	db.Exec("TRUNCATE TABLE products restart identity")
 	m.Run()
 }
 

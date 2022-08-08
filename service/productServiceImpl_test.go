@@ -34,6 +34,12 @@ func TestProductServiceImpl_SaveProductService(t *testing.T) {
 			want: nil,
 		},
 		{
+			name: "product failed duplicate primary key",
+			s:    service,
+			args: args{product: domain.Product{ProductId: 1, ProductName: "teh pucuk", CategoryId: 2, Price: 10000, Stock: 20, ProductDescription: "ini teh pucuk"}},
+			want: errs.NewUnexpectedError("error insert data product"),
+		},
+		{
 			name: "product invalid categoryId not less than 1",
 			s:    service,
 			args: args{product: domain.Product{ProductName: "teh pucuk", CategoryId: 0, Price: 10000, Stock: 20, ProductDescription: "ini teh pucuk"}},
