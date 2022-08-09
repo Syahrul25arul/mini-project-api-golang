@@ -7,4 +7,5 @@ import (
 
 type ProductRepository interface {
 	SaveProduct(product *domain.Product) *errs.AppErr
+	GetAllProduct(page int) ([]domain.Product, *errs.AppErr)
 }

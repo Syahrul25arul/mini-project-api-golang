@@ -50,3 +50,219 @@ func TestProductRepositoryImpl_SaveProduct(t *testing.T) {
 		})
 	}
 }
+
+func TestProductRepositoryImpl_GetAllProduct(t *testing.T) {
+	// setup repository
+	db := database.GetClientDb()
+	repo := NewProductRepository(db)
+
+	// create data product dummy
+	repo.SetupProductDummy()
+
+	// setup testCase
+	testCase := []struct {
+		name      string
+		want      int
+		expected  []domain.Product
+		expected2 *errs.AppErr
+	}{
+		{
+			name: "get all product default",
+			want: 0,
+			expected: []domain.Product{{
+				ProductId:          1,
+				ProductName:        "mie goreng sedap",
+				CategoryId:         1,
+				Price:              2500,
+				Stock:              25,
+				ProductDescription: "ini mie goreng sedap",
+			},
+				{
+					ProductId:          2,
+					ProductName:        "mie goreng udang sedap",
+					CategoryId:         1,
+					Price:              3200,
+					Stock:              21,
+					ProductDescription: "ini mie goreng udang sedap",
+				},
+				{
+					ProductId:          3,
+					ProductName:        "indomie kari ayam",
+					CategoryId:         1,
+					Price:              3000,
+					Stock:              50,
+					ProductDescription: "ini indomie kari ayam",
+				},
+				{
+					ProductId:          4,
+					ProductName:        "indomie goreng",
+					CategoryId:         1,
+					Price:              2700,
+					Stock:              67,
+					ProductDescription: "ini indomie goreng",
+				},
+				{
+					ProductId:          5,
+					ProductName:        "mie selera pedas",
+					CategoryId:         1,
+					Price:              2200,
+					Stock:              31,
+					ProductDescription: "ini mie selera pedas",
+				},
+			},
+			expected2: nil,
+		},
+		{
+			name: "get all product page 1",
+			want: 1,
+			expected: []domain.Product{{
+				ProductId:          1,
+				ProductName:        "mie goreng sedap",
+				CategoryId:         1,
+				Price:              2500,
+				Stock:              25,
+				ProductDescription: "ini mie goreng sedap",
+			},
+				{
+					ProductId:          2,
+					ProductName:        "mie goreng udang sedap",
+					CategoryId:         1,
+					Price:              3200,
+					Stock:              21,
+					ProductDescription: "ini mie goreng udang sedap",
+				},
+				{
+					ProductId:          3,
+					ProductName:        "indomie kari ayam",
+					CategoryId:         1,
+					Price:              3000,
+					Stock:              50,
+					ProductDescription: "ini indomie kari ayam",
+				},
+				{
+					ProductId:          4,
+					ProductName:        "indomie goreng",
+					CategoryId:         1,
+					Price:              2700,
+					Stock:              67,
+					ProductDescription: "ini indomie goreng",
+				},
+				{
+					ProductId:          5,
+					ProductName:        "mie selera pedas",
+					CategoryId:         1,
+					Price:              2200,
+					Stock:              31,
+					ProductDescription: "ini mie selera pedas",
+				},
+			},
+			expected2: nil,
+		},
+		{
+			name: "get all product page 2",
+			want: 2,
+			expected: []domain.Product{{
+				ProductId:          6,
+				ProductName:        "teh pucuk",
+				CategoryId:         2,
+				Price:              4000,
+				Stock:              30,
+				ProductDescription: "ini teh pucuk",
+			},
+				{
+					ProductId:          7,
+					ProductName:        "golda",
+					CategoryId:         2,
+					Price:              4000,
+					Stock:              24,
+					ProductDescription: "ini golda",
+				},
+				{
+					ProductId:          8,
+					ProductName:        "aqua",
+					CategoryId:         2,
+					Price:              5000,
+					Stock:              26,
+					ProductDescription: "ini aqua",
+				},
+				{
+					ProductId:          9,
+					ProductName:        "coca cola",
+					CategoryId:         2,
+					Price:              6000,
+					Stock:              76,
+					ProductDescription: "ini coca cola",
+				},
+				{
+					ProductId:          10,
+					ProductName:        "green tea",
+					CategoryId:         2,
+					Price:              8000,
+					Stock:              38,
+					ProductDescription: "ini green tea",
+				},
+			},
+			expected2: nil,
+		},
+		{
+			name: "get all product page 3",
+			want: 3,
+			expected: []domain.Product{{
+				ProductId:          11,
+				ProductName:        "rokok sampoerna",
+				CategoryId:         3,
+				Price:              28000,
+				Stock:              38,
+				ProductDescription: "ini rokok sampoerna",
+			},
+				{
+					ProductId:          12,
+					ProductName:        "rokok surya pro",
+					CategoryId:         3,
+					Price:              18000,
+					Stock:              27,
+					ProductDescription: "ini surya pro",
+				},
+				{
+					ProductId:          13,
+					ProductName:        "rokok Malboro",
+					CategoryId:         3,
+					Price:              34000,
+					Stock:              38,
+					ProductDescription: "ini rokok Malboro",
+				},
+				{
+					ProductId:          14,
+					ProductName:        "Gula 1kg",
+					CategoryId:         3,
+					Price:              14000,
+					Stock:              18,
+					ProductDescription: "ini Gula 1 kg",
+				},
+				{
+					ProductId:          15,
+					ProductName:        "Garam",
+					CategoryId:         3,
+					Price:              4000,
+					Stock:              58,
+					ProductDescription: "ini Garam",
+				},
+			},
+			expected2: nil,
+		},
+		{
+			name:      "get all product page 4",
+			want:      4,
+			expected:  []domain.Product{},
+			expected2: nil,
+		},
+	}
+
+	for _, testTable := range testCase {
+		t.Run(testTable.name, func(t *testing.T) {
+			products, err := repo.GetAllProduct(testTable.want)
+			assert.Equal(t, testTable.expected, products)
+			assert.Equal(t, testTable.expected2, err)
+		})
+	}
+}
