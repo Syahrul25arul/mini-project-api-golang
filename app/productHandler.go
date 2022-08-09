@@ -70,7 +70,9 @@ func (p ProductHandler) GetProdutById(ctx *gin.Context) {
 
 	// cek jika parameter id adalah empty string, kembalikan pesan errro
 	// karna akan terjadi error jika get data pada database dengan product id empty string
+
 	if productId == "" {
+
 		logger.Error("product id = empty string")
 		ctx.JSON(http.StatusBadRequest, errs.NewBadRequestError("invalid url, parameter id not valid"))
 		return
@@ -83,4 +85,29 @@ func (p ProductHandler) GetProdutById(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, product)
 	}
 
+}
+
+func (p ProductHandler) DeleteProductHandler(ctx *gin.Context) {
+	// tangkap parameter productId dari url request
+	productId := ctx.Param("productId")
+
+	// cek jika parameter id adalah empty string, kembalikan pesan errro
+	// karna akan terjadi error jika get data pada database dengan product id empty string
+
+	if productId == "" {
+
+		logger.Error("product id = empty string")
+		ctx.JSON(http.StatusBadRequest, errs.NewBadRequestError("invalid url, parameter id not valid"))
+		return
+	}
+
+	if err := p.Service.DeleteProductService(productId); err != nil {
+		ctx.JSON(err.Code, err.Message)
+		return
+	} else {
+		ctx.JSON(http.StatusOK, map[string]string{
+			"success": "true",
+			"message": "success delete product",
+		})
+	}
 }
