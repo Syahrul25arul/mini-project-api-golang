@@ -162,6 +162,64 @@ func TestProductHandler_GetAlProductHandler(t *testing.T) {
 			w := httptest.NewRecorder()
 			r.ServeHTTP(w, req)
 
+			assert.Equal(t, testTable.expectedCode, w.Code)
+			fmt.Println(w.Body)
+		})
+	}
+}
+
+func TestProductHandler_GetProdutById(t *testing.T) {
+	// setup gin
+	r := gin.Default()
+
+	// set handler product
+	repo := repostiory.NewProductRepository(database.GetClientDb())
+	service := service.NewProductService(repo)
+	handler := ProductHandler{Service: service}
+
+	// setup data product Dummy
+	repo.SetupProductDummy()
+
+	// set endpoiont
+	r.GET("/products/:productId", handler.GetAlProductHandler)
+
+	// setup testCase
+	testCase := []struct {
+		name         string
+		requestUrl   string
+		expectedCode int
+	}{
+		{
+			name:         "get product id 1 success",
+			requestUrl:   "/products/1",
+			expectedCode: http.StatusOK,
+		},
+		{
+			name:         "get product id 25 not found",
+			requestUrl:   "/products/25",
+			expectedCode: http.StatusNotFound,
+		},
+		{
+			name:         "get product id test not foudn",
+			requestUrl:   "/products/test",
+			expectedCode: http.StatusNotFound,
+		},
+		{
+			name:         "get product id empty string",
+			requestUrl:   "/products/",
+			expectedCode: http.StatusBadRequest,
+		},
+	}
+
+	for _, testTable := range testCase {
+		t.Run(testTable.name, func(t *testing.T) {
+
+			// create new request
+			req, _ := http.NewRequest("GET", testTable.requestUrl, nil)
+
+			w := httptest.NewRecorder()
+			r.ServeHTTP(w, req)
+
 			// assert.Equal(t, testTable.expectedCode, w.Code)
 			fmt.Println(w.Body)
 		})

@@ -62,5 +62,25 @@ func (p ProductHandler) GetAlProductHandler(ctx *gin.Context) {
 	} else {
 		ctx.JSON(http.StatusOK, products)
 	}
+}
+
+func (p ProductHandler) GetProdutById(ctx *gin.Context) {
+	// tangkap parameter productId dari url request
+	productId := ctx.Param("productId")
+
+	// cek jika parameter id adalah empty string, kembalikan pesan errro
+	// karna akan terjadi error jika get data pada database dengan product id empty string
+	if productId == "" {
+		logger.Error("product id = empty string")
+		ctx.JSON(http.StatusBadRequest, errs.NewBadRequestError("invalid url, parameter id not valid"))
+		return
+	}
+
+	if product, err := p.Service.GetProductByIdService(productId); err != nil {
+		ctx.JSON(err.Code, err.Message)
+		return
+	} else {
+		ctx.JSON(http.StatusOK, product)
+	}
 
 }
