@@ -310,3 +310,37 @@ func TestProductRepositoryImpl_GetProductById(t *testing.T) {
 		})
 	}
 }
+
+func TestProductRepositoryImpl_DeleteProduct(t *testing.T) {
+	// setup repository
+	db := database.GetClientDb()
+	repo := NewProductRepository(db)
+
+	// create data product dummy
+	repo.SetupProductDummy()
+
+	// setup testCase
+	testCase := []struct {
+		name     string
+		want     string
+		expected *errs.AppErr
+	}{
+		{
+			name:     "delete product success",
+			want:     "1",
+			expected: nil,
+		},
+		{
+			name:     "delete product not found",
+			want:     "25",
+			expected: errs.NewNotFoundError("product not found"),
+		},
+	}
+
+	for _, testTable := range testCase {
+		t.Run(testTable.name, func(t *testing.T) {
+			err := repo.DeleteProduct(testTable.want)
+			assert.Equal(t, testTable.expected, err)
+		})
+	}
+}

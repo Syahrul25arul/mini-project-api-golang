@@ -64,6 +64,22 @@ func (p ProductRepositoryImpl) GetProductById(productId string) (*domain.Product
 	return &product, nil
 }
 
+func (p ProductRepositoryImpl) DeleteProduct(productId string) *errs.AppErr {
+	// cari produck yang ingin di hapus
+	if result, err := p.GetProductById(productId); err != nil {
+		// jika product tidak ketemu return error
+		return err
+	} else {
+		// delete product dari database
+		if resultDelete := p.db.Delete(result); resultDelete.Error != nil {
+			logger.Error("delete product failed " + resultDelete.Error.Error())
+			return errs.NewUnexpectedError("delete product failed")
+		} else {
+			return nil
+		}
+	}
+}
+
 func (p ProductRepositoryImpl) SetupProductDummy() {
 	p.db.Exec("TRUNCATE TABLE products restart identity")
 	products := []domain.Product{

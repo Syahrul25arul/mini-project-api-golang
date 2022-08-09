@@ -51,7 +51,7 @@ func Start() {
 	r.POST("/login", authHandler.LoginHandler)
 	r.POST("/products", productHandler.SaveProductHandler)
 	r.GET("/products", productHandler.GetAlProductHandler)
-	r.GET("/products/:productId", productHandler.GetAlProductHandler)
+	r.GET("/products/:productId", productHandler.GetProdutById)
 
 	// give info where server and port app running
 	logger.Info(fmt.Sprintf("start server on  %s:%s ...", config.SERVER_ADDRESS, config.SERVER_PORT))
