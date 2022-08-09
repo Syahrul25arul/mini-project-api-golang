@@ -349,3 +349,47 @@ func TestProductServiceImpl_GetAllProduct(t *testing.T) {
 		})
 	}
 }
+
+func TestProductServiceImpl_GetProductByIdService(t *testing.T) {
+	// setup service
+	db := database.GetClientDb()
+	repo := repostiory.NewProductRepository(db)
+	service := NewProductService(repo)
+
+	// create data product dummy
+	repo.SetupProductDummy()
+
+	testCase := []struct {
+		name      string
+		want      string
+		expected1 *domain.Product
+		expected2 *errs.AppErr
+	}{
+		{
+			name:      "get product by id = 1 success",
+			want:      "1",
+			expected1: &domain.Product{ProductId: 1, ProductName: "mie goreng sedap", CategoryId: 1, Price: 2500, Stock: 25, ProductDescription: "ini mie goreng sedap"},
+			expected2: nil,
+		},
+		{
+			name:      "get product by id = 5 success",
+			want:      "6",
+			expected1: &domain.Product{ProductId: 6, ProductName: "teh pucuk", CategoryId: 2, Price: 4000, Stock: 30, ProductDescription: "ini teh pucuk"},
+			expected2: nil,
+		},
+		{
+			name:      "get product by id not found",
+			want:      "20",
+			expected1: nil,
+			expected2: errs.NewNotFoundError("product not found"),
+		},
+	}
+
+	for _, testTable := range testCase {
+		t.Run(testTable.name, func(t *testing.T) {
+			result, err := service.GetProductByIdService(testTable.want)
+			assert.Equal(t, testTable.expected1, result)
+			assert.Equal(t, testTable.expected2, err)
+		})
+	}
+}

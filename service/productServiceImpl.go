@@ -31,6 +31,10 @@ func (s ProductServiceImpl) GetAllProductService(page int) ([]domain.Product, *e
 	return s.repo.GetAllProduct(page)
 }
 
+func (s ProductServiceImpl) GetProductByIdService(productId string) (*domain.Product, *errs.AppErr) {
+	return s.repo.GetProductById(productId)
+}
+
 func (s ProductServiceImpl) isValid(product domain.Product) *errs.AppErr {
 	// buat reflection untuk domain register
 	ref := reflect.TypeOf(product)
