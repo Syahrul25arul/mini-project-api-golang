@@ -1,8 +1,10 @@
 package repostiory
 
 import (
+	"mini-project/config"
 	"mini-project/domain"
 	"mini-project/errs"
+	"mini-project/helper"
 	"mini-project/logger"
 
 	"gorm.io/gorm"
@@ -33,4 +35,14 @@ func (u UserRepositoryImpl) FindByUsername(username string) (*domain.Users, *err
 	}
 
 	return &user, nil
+}
+
+func (u UserRepositoryImpl) SetupAdminDummy() {
+	u.db.Exec("TRUNCATE TABLE users, customers restart identity")
+	admin := domain.Users{
+		Username: "admin",
+		Password: helper.BcryptPassword(config.SECRET_KEY + "admin"),
+		Role:     "admin",
+	}
+	u.db.Create(admin)
 }

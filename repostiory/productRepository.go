@@ -10,4 +10,5 @@ type ProductRepository interface {
 	GetAllProduct(page int) ([]domain.Product, *errs.AppErr)
 	GetProductById(productId string) (*domain.Product, *errs.AppErr)
 	DeleteProduct(productId string) *errs.AppErr
+	ProductUpdate(product domain.Product) *errs.AppErr
 }

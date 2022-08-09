@@ -5,6 +5,7 @@ import (
 	"mini-project/config"
 	"mini-project/database"
 	"mini-project/logger"
+	"mini-project/middleware"
 	"mini-project/repostiory"
 	"mini-project/service"
 
@@ -32,6 +33,9 @@ func Start() {
 	authService := service.NewAuthService(userRepo)
 	authHandler := AuthHandler{authService}
 
+	// setup data admin
+	userRepo.SetupAdminDummy()
+
 	// prepare handle products
 	productRepo := repostiory.NewProductRepository(dbClient)
 	productService := service.NewProductService(productRepo)
@@ -41,17 +45,17 @@ func Start() {
 	productRepo.SetupProductDummy()
 
 	r := gin.Default()
-	// r.GET("/", func(ctx *gin.Context) {
-	// 	ctx.JSON(http.StatusOK, gin.H{
-	// 		"message": "hello world",
-	// 	})
-	// })
 
+	// productRoute := r.Group("/products")
+	// productRoute.Use(middleware.AuthMiddleware)
 	r.POST("/register", customerHandler.RegisterCustomerHandler)
 	r.POST("/login", authHandler.LoginHandler)
-	r.POST("/products", productHandler.SaveProductHandler)
-	r.GET("/products", productHandler.GetAlProductHandler)
-	r.GET("/products/:productId", productHandler.GetProdutById)
+
+	r.POST("/products", middleware.IsAdminMiddleware(), productHandler.SaveProductHandler)
+	r.DELETE("/products/:productId", middleware.IsAdminMiddleware(), productHandler.DeleteProductHandler)
+	r.GET("/products", middleware.AuthMiddleware(), productHandler.GetAlProductHandler)
+	r.GET("/products/:productId", middleware.AuthMiddleware(), productHandler.GetProdutById)
+	r.PUT("/products/:productId", middleware.IsAdminMiddleware(), productHandler.UpdateProductHandler)
 
 	// give info where server and port app running
 	logger.Info(fmt.Sprintf("start server on  %s:%s ...", config.SERVER_ADDRESS, config.SERVER_PORT))

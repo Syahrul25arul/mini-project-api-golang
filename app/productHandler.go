@@ -102,12 +102,55 @@ func (p ProductHandler) DeleteProductHandler(ctx *gin.Context) {
 	}
 
 	if err := p.Service.DeleteProductService(productId); err != nil {
-		ctx.JSON(err.Code, err.Message)
+		ctx.JSON(err.Code, map[string]string{
+			"success": "false",
+			"message": "delete product not found",
+		})
 		return
 	} else {
 		ctx.JSON(http.StatusOK, map[string]string{
 			"success": "true",
 			"message": "success delete product",
+		})
+	}
+}
+
+func (p ProductHandler) UpdateProductHandler(ctx *gin.Context) {
+	productId := ctx.Param("productId")
+
+	// cek jika parameter id adalah empty string, kembalikan pesan errro
+	// karna akan terjadi error jika get data pada database dengan product id empty string
+
+	if productId == "" {
+
+		logger.Error("product id = empty string")
+		ctx.JSON(http.StatusBadRequest, errs.NewBadRequestError("invalid url, parameter id not valid"))
+		return
+	}
+
+	// tangkap request body dari client
+	var product domain.Product
+	ctx.ShouldBindJSON(&product)
+
+	productIdCast, errCast := strconv.Atoi(productId)
+
+	if errCast != nil {
+		logger.Error("error casting product id")
+		ctx.JSON(http.StatusBadRequest, errs.NewBadRequestError("invalid url, parameter id not valid"))
+		return
+	}
+
+	product.ProductId = int32(productIdCast)
+
+	if err := p.Service.ProductUpdateService(product); err != nil {
+		// jika terjdi error tampilkan error
+		ctx.JSON(err.Code, err.Message)
+	} else {
+		// jika tidak error, berikan response ke client
+		ctx.JSON(http.StatusCreated, map[string]any{
+			"code":    http.StatusCreated,
+			"status":  "ok",
+			"message": "success create product",
 		})
 	}
 }

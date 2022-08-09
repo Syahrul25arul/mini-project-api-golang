@@ -4,6 +4,7 @@ import (
 	"mini-project/domain"
 	"mini-project/errs"
 	"mini-project/logger"
+	"strconv"
 
 	"gorm.io/gorm"
 )
@@ -80,8 +81,29 @@ func (p ProductRepositoryImpl) DeleteProduct(productId string) *errs.AppErr {
 	}
 }
 
+func (p ProductRepositoryImpl) ProductUpdate(product domain.Product) *errs.AppErr {
+
+	// find product first
+	productId := strconv.Itoa(int(product.ProductId))
+	_, err := p.GetProductById(productId)
+
+	if err != nil {
+		return err
+	}
+
+	if result := p.db.Save(&product); result.Error != nil {
+		logger.Error("error update data product " + result.Error.Error())
+		return errs.NewUnexpectedError("error update data product")
+	}
+	return nil
+}
+
 func (p ProductRepositoryImpl) SetupProductDummy() {
-	p.db.Exec("TRUNCATE TABLE products restart identity")
+	p.db.Exec("TRUNCATE TABLE products, categories restart identity")
+	p.db.Exec("INSERT INTO categories (category_name) values ('makanan')")
+	p.db.Exec("INSERT INTO categories (category_name) values ('minuman')")
+	p.db.Exec("INSERT INTO categories (category_name) values ('sembako')")
+	p.db.Exec("INSERT INTO categories (category_name) values ('material')")
 	products := []domain.Product{
 		{
 			ProductName:        "mie goreng sedap",

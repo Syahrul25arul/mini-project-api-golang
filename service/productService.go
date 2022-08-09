@@ -10,4 +10,5 @@ type ProductService interface {
 	GetAllProductService(page int) ([]domain.Product, *errs.AppErr)
 	GetProductByIdService(productId string) (*domain.Product, *errs.AppErr)
 	DeleteProductService(productId string) *errs.AppErr
+	ProductUpdateService(product domain.Product) *errs.AppErr
 }

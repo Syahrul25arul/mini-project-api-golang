@@ -39,6 +39,15 @@ func (s ProductServiceImpl) DeleteProductService(productId string) *errs.AppErr 
 	return s.repo.DeleteProduct(productId)
 }
 
+func (s ProductServiceImpl) ProductUpdateService(product domain.Product) *errs.AppErr {
+	// cek apakah data yang dimasukkan sudah valid
+	if err := s.isValid(product); err != nil {
+		logger.Error("error invalid data customer " + err.Message)
+		return err
+	}
+	return s.repo.ProductUpdate(product)
+}
+
 func (s ProductServiceImpl) isValid(product domain.Product) *errs.AppErr {
 	// buat reflection untuk domain register
 	ref := reflect.TypeOf(product)
