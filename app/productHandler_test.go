@@ -3,6 +3,7 @@ package app
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"mini-project/database"
 	"mini-project/domain"
 	"mini-project/helper"
@@ -96,6 +97,73 @@ func TestProductHandler_SaveProductHandler(t *testing.T) {
 			response = helper.ClearDoubleCode(response)
 
 			assert.Equal(t, testTable.expectedMessage, response)
+		})
+	}
+}
+
+func TestProductHandler_GetAlProductHandler(t *testing.T) {
+	// setup gin
+	r := gin.Default()
+
+	// set handler product
+	repo := repostiory.NewProductRepository(database.GetClientDb())
+	service := service.NewProductService(repo)
+	handler := ProductHandler{Service: service}
+
+	// setup data product Dummy
+	repo.SetupProductDummy()
+
+	// set endpoiont
+	r.GET("/products", handler.GetAlProductHandler)
+
+	testCase := []struct {
+		name         string
+		requestUrl   string
+		expectedCode int
+	}{
+		{
+			name:         "get all product default",
+			requestUrl:   "/products",
+			expectedCode: http.StatusOK,
+		},
+		{
+			name:         "get all product page 1",
+			requestUrl:   "/products?page=1",
+			expectedCode: http.StatusOK,
+		},
+		{
+			name:         "get all product page 2",
+			requestUrl:   "/products?page=2",
+			expectedCode: http.StatusOK,
+		},
+		{
+			name:         "get all product page 3",
+			requestUrl:   "/products?page=3",
+			expectedCode: http.StatusOK,
+		},
+		{
+			name:         "get all product page 4",
+			requestUrl:   "/products?page=4",
+			expectedCode: http.StatusOK,
+		},
+		{
+			name:         "get all product url not valid",
+			requestUrl:   "/products?page=test",
+			expectedCode: http.StatusBadRequest,
+		},
+	}
+
+	for _, testTable := range testCase {
+		t.Run(testTable.name, func(t *testing.T) {
+
+			// create new request
+			req, _ := http.NewRequest("GET", testTable.requestUrl, nil)
+
+			w := httptest.NewRecorder()
+			r.ServeHTTP(w, req)
+
+			// assert.Equal(t, testTable.expectedCode, w.Code)
+			fmt.Println(w.Body)
 		})
 	}
 }

@@ -37,6 +37,9 @@ func Start() {
 	productService := service.NewProductService(productRepo)
 	productHandler := ProductHandler{productService}
 
+	// setup dummy product
+	productRepo.SetupProductDummy()
+
 	r := gin.Default()
 	// r.GET("/", func(ctx *gin.Context) {
 	// 	ctx.JSON(http.StatusOK, gin.H{
@@ -47,6 +50,7 @@ func Start() {
 	r.POST("/register", customerHandler.RegisterCustomerHandler)
 	r.POST("/login", authHandler.LoginHandler)
 	r.POST("/products", productHandler.SaveProductHandler)
+	r.GET("/products", productHandler.GetAlProductHandler)
 
 	// give info where server and port app running
 	logger.Info(fmt.Sprintf("start server on  %s:%s ...", config.SERVER_ADDRESS, config.SERVER_PORT))
