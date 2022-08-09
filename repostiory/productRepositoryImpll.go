@@ -51,6 +51,19 @@ func (p ProductRepositoryImpl) GetAllProduct(page int) ([]domain.Product, *errs.
 	return products, nil
 }
 
+func (p ProductRepositoryImpl) GetProductById(productId string) (*domain.Product, *errs.AppErr) {
+	// buat variable untuk struct domain.Product
+	var product domain.Product
+
+	// cek apakah data ada atau tidak
+	if result := p.db.First(&product, productId); result.Error != nil {
+		logger.Error("error get data product by id not found " + result.Error.Error())
+		return nil, errs.NewNotFoundError("product not found")
+	}
+
+	return &product, nil
+}
+
 func (p ProductRepositoryImpl) SetupProductDummy() {
 	p.db.Exec("TRUNCATE TABLE products restart identity")
 	products := []domain.Product{
