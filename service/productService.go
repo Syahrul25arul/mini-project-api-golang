@@ -7,4 +7,5 @@ import (
 
 type ProductService interface {
 	SaveProductService(product domain.Product) *errs.AppErr
+	GetAllProductService(page int) ([]domain.Product, *errs.AppErr)
 }
